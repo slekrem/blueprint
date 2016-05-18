@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+  "dependencies": {
+    "RazorEngine": "3.8.2",
+    "Microsoft.Net.Compilers": "2.0.0-beta1",
+    "Microsoft.CodeAnalysis": "2.0.0-beta1",
+    "System.Threading.Tasks": "4.0.0"
+  },
+  "frameworks": {
+    "dnx451": { }
+  }
+}

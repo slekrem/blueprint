@@ -34,6 +34,8 @@
             @"
             namespace @Model.NamespaceName
             {
+                using System;
+                
                 public class @Model.ClassName 
                 {
                     
@@ -52,7 +54,7 @@
                  Console.WriteLine("sourceCode:");
                  Console.WriteLine(_sourceCode);
                  
-                 Program2.Main(_sourceCode);
+                 Program2.Main2(_sourceCode);
             }
             
             public T Object { get; private set; }
@@ -76,14 +78,15 @@
             {
                 "System", 
                 "System.IO", 
-                "System.Net", 
+                //"System.Net", 
                 "System.Linq", 
                 "System.Text", 
                 "System.Text.RegularExpressions", 
                 "System.Collections.Generic"
             };
 
-        private static string runtimePath = @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\{0}.dll";
+        
+        private static string runtimePath = @"/Library/Frameworks/Mono.framework/Versions/4.4.0/lib/mono/xbuild-frameworks/.NETPortable/v4.0/{0}.dll";
 
         private static readonly System.Collections.Generic.IEnumerable<MetadataReference> DefaultReferences =
             new[]
@@ -92,6 +95,7 @@
                 MetadataReference.CreateFromFile(string.Format(runtimePath, "System")),
                 MetadataReference.CreateFromFile(string.Format(runtimePath, "System.Core"))
             };
+            
 
         private static readonly CSharpCompilationOptions DefaultCompilationOptions =
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
@@ -104,17 +108,24 @@
             return SyntaxFactory.ParseSyntaxTree(stringText, options, filename);
         }
 
-        public static void Main(string sourceCode)
+        public static void Main2(string sourceCode)
         {
             var parsedSyntaxTree = Parse(sourceCode, "", CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp5));
 
             var compilation
                 = CSharpCompilation.Create("Test.dll", new SyntaxTree[] { parsedSyntaxTree }, DefaultReferences, DefaultCompilationOptions);
+                
+            Console.WriteLine(compilation);
+                
             try
             {
-                var result = compilation.Emit(@".\Test.dll");
+                var result = compilation.Emit(@"Test.dll");
 
                 Console.WriteLine(result.Success ? "Sucess!!" : "Failed");
+                foreach(var a in result.Diagnostics)
+                {
+                    //Console.WriteLine(a.GetMessage());
+                }
             }
             catch (Exception ex)
             {
